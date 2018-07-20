@@ -15,7 +15,9 @@ class UserController extends Controller
 
         return view("shop.user.reg");
     }
-    public function index(){
+
+    public function index()
+    {
 
         return view("shop.user.index");
     }

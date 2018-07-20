@@ -28,7 +28,7 @@ class AddStatusShopIdToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['status', 'user_id']);
+            $table->dropColumn(['status', 'shop_id']);
         });
     }
 }
