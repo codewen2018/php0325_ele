@@ -19,12 +19,12 @@ Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
     //店铺分类
     Route::get('shop_category/index',"ShopCategoryController@index");
 
-
-
 });
 
 //商户
 Route::domain('shop.ele.com')->namespace('Shop')->group(function () {
+
     Route::get('user/reg',"UserController@reg");
     Route::get('user/index',"UserController@index");
+
 });
