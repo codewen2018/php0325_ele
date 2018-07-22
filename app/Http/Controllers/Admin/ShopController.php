@@ -6,7 +6,7 @@ use App\Models\Shop;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ShopController extends Controller
+class ShopController extends BaseController
 {
     /**
      * 商家列表
@@ -28,6 +28,7 @@ class ShopController extends Controller
 
         $shop->save();
 
+        //session()->flash("success","通过审核");
         return back()->with("success","通过审核");
 
     }

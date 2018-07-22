@@ -36,18 +36,19 @@
     <![endif]-->
 
     <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
-   {{--引入头部视图--}}
-       @include("layouts.shop._header")
-    <!-- Left side column. contains the logo and sidebar -->
-    {{--引用左边子视图--}}
-    @include("layouts.shop._left")
+{{--引入头部视图--}}
+@include("layouts.shop._header")
+<!-- Left side column. contains the logo and sidebar -->
+{{--引用左边子视图--}}
+@include("layouts.shop._left")
 
-    <!-- Content Wrapper. Contains page content -->
+<!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
@@ -61,19 +62,21 @@
             </ol>
         </section>
 
-        {{--引入错误 提示--}}
-        {{--引用户 消息提示--}}
-        <!-- Main content -->
-       {{--主体部分--}}
-        @yield("content")
+    {{--引入错误 提示--}}
+    @include("layouts.shop._errors")
+    {{--引用户 消息提示--}}
+    @include("layouts.shop._msg")
+    <!-- Main content -->
+    {{--主体部分--}}
+    @yield("content")
 
 
-        <!-- /.content -->
+    <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    {{--引入尾部子视图--}}
-       @include("layouts.shop._footer")
-    <!-- Control Sidebar -->
+{{--引入尾部子视图--}}
+@include("layouts.shop._footer")
+<!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
         <!-- Create the tabs -->
         <ul class="nav nav-tabs nav-justified control-sidebar-tabs">

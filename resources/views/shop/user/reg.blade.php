@@ -82,7 +82,7 @@
             <label for="password_confirmation">确认密码：</label>
             <input type="password" name="password_confirmation" class="form-control">
         </div>
-        {{ csrf_field() }}
+
         <button type="submit" class="btn btn-primary">提交</button>
     </form>
 @endsection

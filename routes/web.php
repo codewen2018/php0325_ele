@@ -16,6 +16,8 @@ Route::get('/', function () {
 });
 //平台
 Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
+    #后台用户登录
+    Route::any('admin/login', "AdminController@login")->name('admin.login');
     //店铺分类 App\Http\Controllers\Admin
     Route::get('shop_category/index', "ShopCategoryController@index")->name('shop_cate.index');
 
@@ -28,9 +30,14 @@ Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
 //商户
 Route::domain('shop.ele.com')->namespace('Shop')->group(function () {
 
+    # 商家注册
     Route::any('user/reg', "UserController@reg");
+    # 商家登录
     Route::any('user/login', "UserController@login")->name('user.login');
-    Route::get('user/index', "UserController@index");
+    #商家退出
+    Route::get('user/logout', "UserController@logout")->name('user.logout');
+    //商家首页
+    Route::get('user/index', "UserController@index")->name('user.index');
 
 });
 

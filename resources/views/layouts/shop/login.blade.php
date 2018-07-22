@@ -22,6 +22,7 @@
 <div class="container-fluid">
 
     @include("layouts.shop._errors")
+    @include("layouts.shop._msg")
     @yield("content")
 
 </div>
@@ -30,5 +31,12 @@
 <script src="/bootstrap/js/jquery.min.js"></script>
 <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 <script src="/bootstrap/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+       setTimeout(function () {
+           $(".flash-message").hide();
+       },3000)
+    });
+</script>
 </body>
 </html>

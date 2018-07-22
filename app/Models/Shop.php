@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Shop extends Model
 {
     public static $statusArray=['1'=>'正常','0'=>'待审核',"-1"=>'已禁用'];
+
+
     protected $fillable = ['shop_name', 'shop_img', 'shop_rating', 'brand', 'on_time',
         'fengniao', 'bao', 'piao', 'zhun', 'start_send', 'send_cost', 'notice', 'discount', 'shop_cate_id'];
 
