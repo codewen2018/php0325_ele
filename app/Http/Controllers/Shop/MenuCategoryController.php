@@ -77,4 +77,20 @@ class MenuCategoryController extends Controller
     {
 
     }
+
+    public function upload(Request $request){
+
+        $file=$request->file('file');
+
+        if ($file){
+
+            //上传并得到数据
+            $data=[
+                'url'=>env("ALIYUN_OSS_URL").$file->store('menu',"oss")
+            ];
+            return $data;
+        }
+
+
+    }
 }

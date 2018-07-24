@@ -60,6 +60,8 @@ Route::domain('shop.ele.com')->namespace('Shop')->group(function () {
     Route::any("menu_cate/edit/{id}","MenuCategoryController@edit")->name('menu_cate.edit');
     Route::get("menu_cate/del/{id}","MenuCategoryController@del")->name('menu_cate.del');
 
+    Route::any("menu_cate/upload","MenuCategoryController@upload")->name('menu_cate.upload');
+
     //菜品管理
     Route::get("menu/index","MenuController@index")->name('menu.index');
     Route::any("menu/add","MenuController@add")->name('menu.add');
