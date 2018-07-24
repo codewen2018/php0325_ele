@@ -111,7 +111,7 @@ class UserController extends BaseController
             if (Auth::attempt(['name'=>$request->post('name'),'password'=>$request->password,'status'=>1])){
               // session()->flash("success","登录成功");
                 //登录成功
-                return redirect()->route("user.index")->with("success","登录成功");
+                return redirect()->intended(route("index.index"))->with("success","登录成功");
 
             }
 

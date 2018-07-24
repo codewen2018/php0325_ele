@@ -26,4 +26,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    //通过用户找商店
+    public function shop(){
+        return $this->belongsTo(Shop::class);
+    }
 }

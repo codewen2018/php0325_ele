@@ -4,11 +4,7 @@
 
 @section("content")
 
-    <form action="" method="get">
-
-        <input type="text" name="keyword" placeholder="搜索用户名或EMAIL">
-        <input type="submit" value="搜索">
-    </form>
+    <a href="" class="btn btn-primary">添加</a>
     <table class="table table-bordered">
         <tr>
             <th>Id</th>
@@ -23,12 +19,19 @@
                 <td>{{$cate->id}}</td>
                 <td>{{$cate->name}}</td>
                 <td>
-                    <img src="/uploads/{{$cate->logo}}" width="40">
+                    <img src="" width="40">
 
                 </td>
                 <td>
-                    <a href="/">编辑</a>
-                    <a href="/">删除</a>
+                    @if ($cate->status)
+                        正常
+                    @else
+                        禁用
+                    @endif
+                </td>
+                <td>
+                    <a href="/" class="btn btn-info">编辑</a>
+                    <a href="{{route('shop_cate.del',$cate->id)}}" class="btn btn-danger">删除</a>
 
                 </td>
             </tr>

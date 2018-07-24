@@ -6,9 +6,11 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "barryvdh/laravel-debugbar": "^3.1",
         "barryvdh/laravel-ide-helper": "^2.4",
         "doctrine/dbal": " ~2.3",
         "fideloper/proxy": "~3.3",
+        "jacobcyl/ali-oss-storage": "^2.1",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0"
     },

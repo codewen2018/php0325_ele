@@ -36,5 +36,8 @@
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 {{--包含子视图--}}
 @include("layouts.admin._footer")
+
+{{--定义JS代码--}}
+@yield("js")
 </body>
 </html>

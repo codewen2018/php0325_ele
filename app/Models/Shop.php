@@ -17,4 +17,8 @@ class Shop extends Model
 
         return $this->belongsTo(ShopCategory::class,"shop_cate_id");
     }
+    //通过商家找用户
+    public function user(){
+        return $this->hasOne(User::class);
+    }
 }
