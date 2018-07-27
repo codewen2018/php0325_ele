@@ -42,6 +42,11 @@ Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
 
     //商家用户管理
     Route::get('user/index', "UserController@index")->name('admin.user.index');
+
+
+    //活动管理
+    Route::get('activity/index', "ActivityController@index")->name('admin.activity.index');
+    Route::any('activity/add', "ActivityController@add")->name('admin.activity.add');
 });
 
 //商户

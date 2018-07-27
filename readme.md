@@ -329,7 +329,7 @@
 5. 添加JS代码到当前视图
 
    ```
- <script>
+    <script>
            // 图片上传demo
            jQuery(function () {
                var $ = jQuery,
@@ -362,12 +362,13 @@
 
                    // 文件接收服务端。
                    server: '{{route('menu.upload')}}',
+   ```
 
 
                    // 选择文件的按钮。可选。
                    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
                    pick: '#filePicker',
-
+    
                    // 只允许选择文件，可选。
                    accept: {
                        title: 'Images',
@@ -375,7 +376,7 @@
                        mimeTypes: 'image/*'
                    }
                });
-
+    
                // 当有文件添加进来的时候
                uploader.on('fileQueued', function (file) {
                    var $li = $(
@@ -385,58 +386,58 @@
                        '</div>'
                        ),
                        $img = $li.find('img');
-
+    
                    $list.append($li);
-
+    
                    // 创建缩略图
                    uploader.makeThumb(file, function (error, src) {
                        if (error) {
                            $img.replaceWith('<span>不能预览</span>');
                            return;
                        }
-
+    
                        $img.attr('src', src);
                    }, thumbnailWidth, thumbnailHeight);
                });
-
+    
                // 文件上传过程中创建进度条实时显示。
                uploader.on('uploadProgress', function (file, percentage) {
                    var $li = $('#' + file.id),
                        $percent = $li.find('.progress span');
-
+    
                    // 避免重复创建
                    if (!$percent.length) {
                        $percent = $('<p class="progress"><span></span></p>')
                            .appendTo($li)
                            .find('span');
                    }
-
+    
                    $percent.css('width', percentage * 100 + '%');
                });
-
+    
                // 文件上传成功，给item添加成功class, 用样式标记上传成功。
                uploader.on('uploadSuccess', function (file, data) {
                    //console.dir(data);
                    $('#' + file.id).addClass('upload-state-done');
-
+    
                    //找到goods_img  设置goods_img的value值
                    $("#goods_img").val(data.url);
-
+    
                });
-
+    
                // 文件上传失败，现实上传出错。
                uploader.on('uploadError', function (file) {
                    var $li = $('#' + file.id),
                        $error = $li.find('div.error');
-
+    
                    // 避免重复创建
                    if (!$error.length) {
                        $error = $('<div class="error"></div>').appendTo($li);
                    }
-
+    
                    $error.text('上传失败');
                });
-
+    
                // 完成上传完了，成功或者失败，先删除进度条。
                uploader.on('uploadComplete', function (file) {
                    $('#' + file.id).find('.progress').remove();
@@ -487,4 +488,20 @@
 
 
 
+## Day05
+
+### 开发任务
+
+接口开发 
+
+- 商家列表接口(支持商家搜索) 
+- 获取指定商家接口
+
+### 实现步骤
+
+1. 在routes/api.php写API接口
+2. 在public/api.js 配置相关路由
+3. 参考之前接口文件获取数据
+4. 书写API接口文档 https://www.showdoc.cc/web/#/
+5. 安装POSTMAN调试
 

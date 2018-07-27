@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends BaseController
 {
@@ -20,8 +21,6 @@ class UserController extends BaseController
 
         //判断是不是POST提交
         if ($request->isMethod("post")) {
-            //dd($request);
-
             //验证
             $this->validate($request, [
                 'shop_cate_id' => 'required|integer',
@@ -53,9 +52,9 @@ class UserController extends BaseController
             //判断是否上传了图片
             if ($file) {
                 //存在就上传
-                $shop->shop_img = $file->store("/upload/images/shop", 'images');
+                $shop->shop_img =env("ALIYUN_OSS_URL"). $file->store("shop", 'oss');
 
-                //dd($shop->shop_img);
+               // dd($shop->shop_img);
             }
 
             //开启事务

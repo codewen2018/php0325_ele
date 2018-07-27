@@ -78,7 +78,8 @@ class MenuController extends BaseController
             return redirect()->route('menu.index')->with("success","添加成功");
 
         }
-        $cates = MenuCategory::all();
+        //得到分类
+        $cates = MenuCategory::where("shop_id",Auth::user()->shop_id)->get();
         return view("shop.menu.add", compact('cates'));
     }
 
