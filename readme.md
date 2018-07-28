@@ -505,3 +505,33 @@
 4. 书写API接口文档 https://www.showdoc.cc/web/#/
 5. 安装POSTMAN调试
 
+
+## Day06
+
+### 开发任务
+
+接口开发 
+
+- 用户注册 
+- 用户登录 
+- 发送短信 
+  要求 
+- 创建会员表 
+- 短信验证码发送成功后,保存到redis,并设置有效期5分钟 
+- 用户注册时,从redis取出验证码进行验证
+
+### 实现步骤
+
+#### 1.短信发送
+
+参考 https://packagist.org/packages/mrgoon/aliyun-sms 使用非Laravel框架方法
+
+#### 2.redis使用
+
+参考 https://laravel-china.org/docs/laravel/5.5/redis/1331
+
+### 3.会员注册实现
+
+1. 接收手机号
+2. 生成随机验证码
+3. 把验证码存在redis中
