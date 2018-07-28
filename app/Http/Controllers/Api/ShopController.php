@@ -10,32 +10,32 @@ use App\Http\Controllers\Controller;
 
 class ShopController extends Controller
 {
+    public function __construct()
+    {
+        header('Access-Control-Allow-Origin:*');
+    }
+
     //提供店铺列表
     public function list(Request $request)
     {
 
-        // $keyword=$request->input('keyword');
+        //接收参数
+        $keyword = $request->input('keyword');
 
 
-        $shops = Shop::where("status", 1)->get();
+        $shops = Shop::where("status", 1)->where('shop_name', 'like', "%$keyword%")->get();
 
 
         foreach ($shops as $shop) {
-
             $shop->distance = rand(1000, 3000);
             $shop->estimate_time = $shop->distance / 100;
-
         }
         // var_dump($shops);exit;
-
         return $shops;
-
     }
 
     public function index(Request $request)
     {
-
-
         //店铺的ID
         $id = $request->input('id');
 
@@ -45,7 +45,6 @@ class ShopController extends Controller
         //给店铺添加没用的东西
         $shop->distance = rand(1000, 3000);
         $shop->estimate_time = $shop->distance / 100;
-
         //添加评论
         $shop->evaluate = [
             [
@@ -66,18 +65,18 @@ class ShopController extends Controller
                 "evaluate_details" => "很好吃"]
         ];
 
-        //先取出分类
-        $cates=MenuCategory::where("shop_id",$id)->get();
+        //先取出分类 预加载
+        $cates = MenuCategory::with("goodsList")->where("shop_id", $id)->get();
+        //dd($cates->toArray());
         //循环分类 取出当前分类下的所有商品
-        foreach ($cates as $cate){
-            $cate->goods_list=Menu::where("cate_id",$cate->id)->get();
-        }
+       /* foreach ($cates as $cate) {
+         //   $cate->goods_list = Menu::where("cate_id", $cate->id)->get();
+           // $cate->goods_list=$cate->goodsList;
+        }*/
 
         //再把分类数据追加到$shop
-        $shop->commodity=$cates;
-       // dump($cates->toArray());
-
+        $shop->commodity = $cates;
+        // dump($cates->toArray());
         return $shop;
-
     }
 }

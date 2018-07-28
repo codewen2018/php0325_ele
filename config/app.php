@@ -179,7 +179,6 @@ return [
 
         //ueditor
         Overtrue\LaravelUEditor\UEditorServiceProvider::class,
-
     ],
 
     /*

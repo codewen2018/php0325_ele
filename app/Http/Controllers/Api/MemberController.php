@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redis;
+use Mrgoon\AliSms\AliSms;
+
+class MemberController extends Controller
+{
+    /**
+     * 发送短信
+     */
+    public function sms()
+    {
+
+        //1.接收参数 手机号
+        $tel=\request()->input('tel');
+
+        //判断一下是不是一个合格手机号
+        //2.生成一个验证码
+        $code=rand(1000,9999);
+        //3.把验证码存起来  存在哪里？  如何存?
+        //3.1 存在Redis里
+
+        //3.2 如何存  键  ===》值      ["tel_18544445555"=>1245];  只能存5分钟
+        /*Redis::set("tel_".$tel,$code);//存进来
+        Redis::expire("tel_".$tel,300);//设置过期时间*/
+
+        Redis::setex("tel_".$tel,300,$code);
+
+        //4.测试
+        //配置
+
+       /* return [
+            "status"=>"true",
+            "message"=>"获取短信验证码成功".$code
+        ];*/
+        $config = [
+            'access_key' => 'LTAIrGYffYL2khhY',
+            'access_secret' => 'J9LzDSH0R0WzbICjKzmV257xZmcP26',
+            'sign_name' => '杜连杰',
+        ];
+
+
+        $aliSms=new AliSms();
+        //调用接口发送短信
+        $response = $aliSms->sendSms($tel, 'SMS_140690138', ['code'=> $code], $config);
+
+
+        if($response->Message==="OK"){
+            //成功
+
+            return [
+              "status"=>"true",
+              "message"=>"获取短信验证码成功"
+            ];
+        }else{
+            //失败
+            return [
+                "status"=>"false",
+                "message"=>$response->Message
+            ];
+        }
+    }
+
+    /**
+     * 登录
+     */
+    public function login()
+    {
+
+        //1.先通过用户名找哪当前用户
+
+        //2.如果用户密码存在 再来验证密码  Hash:check
+
+        //3.如果密码也成功 登录成功
+
+    return \request()->all();
+
+    }
+}

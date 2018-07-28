@@ -21,6 +21,7 @@ class UserController extends BaseController
 
         //判断是不是POST提交
         if ($request->isMethod("post")) {
+          //  dd($request->file('shop_img')->store("shop", 'oss'));
             //验证
             $this->validate($request, [
                 'shop_cate_id' => 'required|integer',

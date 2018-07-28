@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a994f88509b3507a14d98a8a4f46f396",
+    "content-hash": "f3a5c73edd347ea2c40fd70ed7d72b0a",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -1459,6 +1459,90 @@
             "time": "2017-06-19T01:22:40+00:00"
         },
         {
+            "name": "mrgoon/aliyun-sms",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MissMyCat/aliyun-sms.git",
+                "reference": "64e6e4cb4ae9678dfdc5c46cf759c5e21e9f6a35"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MissMyCat/aliyun-sms/zipball/64e6e4cb4ae9678dfdc5c46cf759c5e21e9f6a35",
+                "reference": "64e6e4cb4ae9678dfdc5c46cf759c5e21e9f6a35",
+                "shasum": ""
+            },
+            "require": {
+                "mrgoon/aliyun-sms-sdk": ">=1.1.2",
+                "php": ">5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mrgoon\\AliSms\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mrgoon",
+                    "email": "mrgoon@foxmail.com"
+                }
+            ],
+            "description": "阿里云短信服务php调用代码",
+            "keywords": [
+                "Aliyun-Sms",
+                "aliyun",
+                "sdk"
+            ],
+            "time": "2017-10-19T08:02:14+00:00"
+        },
+        {
+            "name": "mrgoon/aliyun-sms-sdk",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MissMyCat/aliyun-sms-sdk.git",
+                "reference": "5c8863dce9643fb46180520586bb8d1362e52d7f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MissMyCat/aliyun-sms-sdk/zipball/5c8863dce9643fb46180520586bb8d1362e52d7f",
+                "reference": "5c8863dce9643fb46180520586bb8d1362e52d7f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mrgoon\\AliyunSmsSdk\\": "aliyun-php-sdk-core/",
+                    "Mrgoon\\Dysmsapi\\Request\\V20170525\\": "Dysmsapi/Request/V20170525"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "mrgoon",
+                    "email": "mrgoon@foxmail.com"
+                }
+            ],
+            "description": "阿里云短信服务核心代码",
+            "keywords": [
+                "Aliyun-Sms",
+                "aliyun",
+                "sdk"
+            ],
+            "time": "2017-10-19T08:33:11+00:00"
+        },
+        {
             "name": "mtdowling/cron-expression",
             "version": "v1.2.1",
             "source": {
@@ -1702,6 +1786,56 @@
                 "random"
             ],
             "time": "2018-07-04T16:31:37+00:00"
+        },
+        {
+            "name": "predis/predis",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
+                }
+            ],
+            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
+            "homepage": "http://github.com/nrk/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "time": "2016-06-16T16:22:20+00:00"
         },
         {
             "name": "psr/container",
@@ -4810,7 +4944,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "mrgoon/aliyun-sms": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
