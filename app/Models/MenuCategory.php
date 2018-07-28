@@ -12,6 +12,8 @@ class MenuCategory extends Model
     //通过分类找菜品goods_list=====>goodsList
     public function goodsList(){
 
-        return $this->hasMany(Menu::class,"cate_id");
+      return $this->hasMany(Menu::class,"cate_id");
+
+
     }
 }

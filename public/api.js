@@ -1,10 +1,10 @@
 window.api = {
   // 登录验证接口
-  loginCheck: '/loginCheck.php',
+  loginCheck: '/api/member/login',
   // 获取短信验证码接口
   sms: '/api/member/sms',
   // 注册接口
-  regist: '/regist.php',
+  regist: '/api/member/reg',
   // 修改密码接口
   changePassword: '/changePassword.php',
   // 忘记密码接口

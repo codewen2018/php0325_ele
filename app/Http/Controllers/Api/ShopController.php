@@ -66,13 +66,29 @@ class ShopController extends Controller
         ];
 
         //先取出分类 预加载
-        $cates = MenuCategory::with("goodsList")->where("shop_id", $id)->get();
+        $cates = MenuCategory::where("shop_id", $id)->get();
+
+        //
+
+
         //dd($cates->toArray());
         //循环分类 取出当前分类下的所有商品
-       /* foreach ($cates as $cate) {
-         //   $cate->goods_list = Menu::where("cate_id", $cate->id)->get();
-           // $cate->goods_list=$cate->goodsList;
-        }*/
+        foreach ($cates as $cate) {
+             // $cate->goods_list = Menu::where("cate_id", $cate->id)->get();
+            //循环
+        /*    foreach ($cate->goods_list as $k=>$v){
+                $cate->goods_list[$k]->goods_id=$v->id;
+            }*/
+              //通过分类的ID找出属于这个分类的所有商品
+            $goods=Menu::where("cate_id", $cate->id)->get();
+
+            //循环Goods
+            foreach ($goods as $k=>$good){
+                $goods[$k]["goods_id"]=$good->id;
+            }
+            $cate->goods_list=$goods;
+            // $cate->goods_list=$cate->goodsList;
+        }
 
         //再把分类数据追加到$shop
         $shop->commodity = $cates;
