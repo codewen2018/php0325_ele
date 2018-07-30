@@ -12,6 +12,11 @@ use Mrgoon\AliSms\AliSms;
 
 class MemberController extends Controller
 {
+    public function __construct()
+    {
+        header('Access-Control-Allow-Origin:*');
+    }
+
     /**
      * 发送短信
      */
@@ -31,6 +36,7 @@ class MemberController extends Controller
         /*Redis::set("tel_".$tel,$code);//存进来
         Redis::expire("tel_".$tel,300);//设置过期时间*/
 
+        //优先使用Session，其次缓存，再数据库  大型网站使用redis
         Redis::setex("tel_" . $tel, 300, $code);
 
         //4.测试
@@ -113,7 +119,8 @@ class MemberController extends Controller
 
             }
             //密码加密
-            $data['password'] = bcrypt($data['password']);
+          //  $data['password'] = bcrypt($data['password']);
+            $data['password'] =Hash::make($data['password']);
             //数据入库
             Memeber::create($data);
             //返回数据

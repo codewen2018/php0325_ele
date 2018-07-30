@@ -83,9 +83,9 @@ class ShopController extends Controller
             $goods=Menu::where("cate_id", $cate->id)->get();
 
             //循环Goods
-            foreach ($goods as $k=>$good){
+          /*  foreach ($goods as $k=>$good){
                 $goods[$k]["goods_id"]=$good->id;
-            }
+            }*/
             $cate->goods_list=$goods;
             // $cate->goods_list=$cate->goodsList;
         }

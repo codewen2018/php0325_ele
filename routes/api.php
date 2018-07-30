@@ -17,12 +17,23 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
-//店铺列表
-Route::get("shop/list","Api\ShopController@list");
-Route::get("shop/index","Api\ShopController@index");
+Route::namespace('Api')->group(function () {
+    // 在 "App\Http\Controllers\Api" 命名空间下的控制器
+    //店铺列表
+    Route::get("shop/list","ShopController@list");
+    Route::get("shop/index","ShopController@index");
+
+    //会员管理
+    Route::get("member/reg","MemberController@reg");
+    Route::get("member/sms","MemberController@sms");
+    Route::any("member/login","MemberController@login");
+    Route::post("member/reg","MemberController@reg");
 
 
-Route::get("member/reg","Api\MemberController@reg");
-Route::get("member/sms","Api\MemberController@sms");
-Route::any("member/login","Api\MemberController@login");
-Route::post("member/reg","Api\MemberController@reg");
+
+    //地址管理
+    Route::post("address/add","AddressController@add");
+
+    //购物车
+    Route::post("cart/add","CartController@add");
+});

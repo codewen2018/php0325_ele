@@ -14,7 +14,7 @@ window.api = {
   // 指定地址接口
   address: '/address.php',
   // 保存新增地址接口
-  addAddress: '/addAddress.php',
+  addAddress: '/api/address/add',
   // 保存修改地址接口
   editAddress: '/editAddress.php',
   // 获得订单列表接口
@@ -26,7 +26,7 @@ window.api = {
   // 获得指定商家接口
   business: '/api/shop/index',
   // 保存购物车接口
-  addCart: '/addCart.php',
+  addCart: '/api/cart/add',
   // 获取购物车数据接口
   cart: '/cart.php',
   // 添加订单接口
