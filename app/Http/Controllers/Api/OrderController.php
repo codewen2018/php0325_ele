@@ -8,8 +8,10 @@ use App\Models\Memeber;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderGood;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends BaseController
 {
@@ -64,28 +66,57 @@ class OrderController extends BaseController
         //3.6 状态 等待支付
         $data['status'] = 0;
 
-        //3.7 创建订单
-        $order = Order::create($data);
+        //事务启动
+        DB::beginTransaction();
 
-        //4.添加订单商品
-        foreach ($carts as $k1 => $v1) {
+        try {
 
-            //找出当前商品
-            $good = Menu::find($v1->goods_id);
+            //3.7 创建订单
+            $order = Order::create($data);
+            //4.添加订单商品
+            foreach ($carts as $k1 => $v1) {
 
-            //库存不够
+                //找出当前商品
+                $good = Menu::find($v1->goods_id);
 
-            //构造数据
-            $dataGoods['order_id'] = $order->id;
-            $dataGoods['goods_id'] = $v1->goods_id;
-            $dataGoods['amount'] = $v1->amount;
-            $dataGoods['goods_name'] = $good->goods_name;
-            $dataGoods['goods_img'] = $good->goods_img;
-            $dataGoods['goods_price'] = $good->goods_price;
+                //库存不够
+                if ($v1->amount > $good->store) {
+                    throw new  \Exception($good->goods_name . "库存不足");
+                }
+                //减库存
+                $good->store = $good->store - $v1->amount;
+                $good->save();
 
-            //数据入库
-            OrderGood::create($dataGoods);
+                //构造数据
+                $dataGoods['order_id'] = $order->id;
+                $dataGoods['goods_id'] = $v1->goods_id;
+                $dataGoods['amount'] = $v1->amount;
+                $dataGoods['goods_name'] = $good->goods_name;
+                $dataGoods['goods_img'] = $good->goods_img;
+                $dataGoods['goods_price'] = $good->goods_price;
 
+                //数据入库
+                OrderGood::create($dataGoods);
+
+            }
+            //提交
+            DB::commit();
+        } catch (\Exception $exception) {
+            //回滚
+            DB::rollBack();
+            //返回数据
+            return [
+                "status" => "false",
+                "message" => $exception->getMessage(),
+            ];
+        } catch (QueryException $exception) {
+            //回滚
+            DB::rollBack();
+            //返回数据
+            return [
+                "status" => "false",
+                "message" => $exception->getMessage(),
+            ];
         }
 
         return [
@@ -162,11 +193,13 @@ class OrderController extends BaseController
     /**
      * 订单列表
      */
-    public function index(Request $request){
+    public function index(Request $request)
+    {
 
-        $orders=Order::where("user_id",$request->input('user_id'))->get();
+        $orders = Order::where("user_id", $request->input('user_id'))->get();
 
-        foreach ($orders as $order){
+        $datas=[];
+        foreach ($orders as $order) {
             $data['id'] = $order->id;
             $data['order_code'] = $order->sn;
             $data['order_birth_time'] = (string)$order->created_at;
@@ -179,7 +212,7 @@ class OrderController extends BaseController
 
             $data['goods_list'] = $order->goods;
 
-            $datas[]=$data;
+            $datas[] = $data;
         }
 
         return $datas;
