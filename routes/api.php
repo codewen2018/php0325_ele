@@ -28,12 +28,21 @@ Route::namespace('Api')->group(function () {
     Route::get("member/sms","MemberController@sms");
     Route::any("member/login","MemberController@login");
     Route::post("member/reg","MemberController@reg");
+    Route::get("member/detail","MemberController@detail");
 
 
 
     //地址管理
     Route::post("address/add","AddressController@add");
+    Route::get("address/index","AddressController@index");
 
     //购物车
     Route::post("cart/add","CartController@add");
+    Route::get("cart/index","CartController@index");
+
+    //订单
+    Route::post("order/add","OrderController@add");
+    Route::get("order/detail","OrderController@detail");
+    Route::post("order/pay","OrderController@pay");
+    Route::get("order/index","OrderController@index");
 });

@@ -7,8 +7,22 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
-class AddressController extends Controller
+class AddressController extends BaseController
 {
+    /**
+     * 地址列表
+     */
+    public function index(Request $request){
+        //得到当前用户ID
+        $memberId=$request->input('user_id');
+        //返回当前用户所有地址
+        $addresses=Address::all();
+
+        //直接返回
+        return $addresses;
+
+
+    }
 
     public function add(Request $request){
 

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 use Mrgoon\AliSms\AliSms;
 
-class MemberController extends Controller
+class MemberController extends BaseController
 {
     public function __construct()
     {
@@ -161,5 +161,13 @@ class MemberController extends Controller
         ];
 
 
+    }
+
+    /**
+     * 用户信息
+     */
+    public function detail(Request $request)
+    {
+        return Memeber::find($request->input('user_id'));
     }
 }

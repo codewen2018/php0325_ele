@@ -10,4 +10,5 @@ class Memeber extends Model
     public $fillable=['username','password','tel'];
 
 
+    public $hidden=['password','remember_token'];
 }
