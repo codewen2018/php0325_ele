@@ -42,7 +42,7 @@ class OrderController extends BaseController
 
         $data['shop_id'] = $shopId;
 
-        //3.3 订单号生成 180731094120
+        //3.3 订单号生成 1807310941203456
         $data['sn'] = date("ymdHis") . rand(1000, 9999);
         //3.4 地址
         $data['provence'] = $address->provence;
@@ -99,6 +99,9 @@ class OrderController extends BaseController
                 OrderGood::create($dataGoods);
 
             }
+
+            //清空当前用户购物车
+            Cart::where("user_id",$request->post('user_id'))->delete();
             //提交
             DB::commit();
         } catch (\Exception $exception) {

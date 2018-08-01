@@ -83,5 +83,9 @@ Route::domain('shop.ele.com')->namespace('Shop')->group(function () {
     //商家首页
     Route::get('user/index', "UserController@index")->name('user.index');
 
+    //订单统计
+    Route::get('order/day', "OrderController@day")->name('order.day');
+    Route::get('order/index', "OrderController@index")->name('order.index');
+
 });
 
