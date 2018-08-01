@@ -86,6 +86,8 @@ Route::domain('shop.ele.com')->namespace('Shop')->group(function () {
     //订单统计
     Route::get('order/day', "OrderController@day")->name('order.day');
     Route::get('order/index', "OrderController@index")->name('order.index');
+    Route::get('order/changeStatus/{id}/{status}', "OrderController@changeStatus")->name('order.changeStatus');
+    Route::get('order/detail/{id}', "OrderController@detail")->name('order.detail');
 
 });
 
