@@ -582,3 +582,193 @@
 
 
 
+## Day10
+
+### 开发任务
+
+平台 
+
+- 权限管理 
+- 角色管理[添加角色时,给角色关联权限] 
+- 管理员管理[添加和修改管理员时,修改管理员的角色]
+
+### 实现步骤
+
+##### RABC实现
+
+1. 安装 composer require spatie/laravel-permission -vvv
+
+2. 创建数据迁移    php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="migrations"
+
+3. 执行数据迁移  php artisan migrate
+
+4. 生成配置文件 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --tag="config"
+
+5. 在Admin模型中 use HasRole
+
+   ```php
+   <?php
+
+   namespace App\Models;
+
+   use Illuminate\Database\Eloquent\Model;
+   use Illuminate\Foundation\Auth\User as Authenticatable;
+   use Spatie\Permission\Traits\HasRoles;
+
+   class Admin extends Authenticatable
+   {
+       //引入
+       use HasRoles;
+       protected $guard_name = 'admin';
+   }
+
+   ```
+
+6. 添加权限
+
+   ```php
+    public function add(){
+
+           //添加一个权限   权限名称必需是路由的名称  后面做权限判断
+           $per=Permission::create(['name'=>'admin.shop.index','guard_name'=>'admin']);
+
+       }
+   ```
+
+7. 角色添加
+
+   ```php
+      public function add(Request $request){
+
+
+           if ($request->isMethod('post')){
+
+
+              // dd($request->post('per'));
+               //接收参数
+               $data['name']=$request->post('name');
+               $data['guard_name']="admin";
+
+
+               //创建角色
+               $role=Role::create($data);
+
+               //还给给角色添加权限
+               $role->syncPermissions($request->post('per'));
+
+               //跳转并提示
+               return redirect()->route('admin.role.index')->with('success','创建'.$role->name."成功");
+
+
+           }
+
+           //得到所有权限
+           $pers=Permission::all();
+
+           return view('admin.role.add',compact('pers'));
+
+       }
+   }
+   ```
+
+8. 用户指定角色
+
+   ```php
+    /**
+        * 添加用户
+        */
+       public function add(Request $request)
+       {
+           if ($request->isMethod('post')){
+
+
+               // dd($request->post('per'));
+               //接收参数
+               $data=$request->post();
+               $data['password']=bcrypt($data['password']);
+
+
+               //创建用户
+               $admin=Admin::create($data);
+
+
+               //给用户对象添加角色 同步角色
+               $admin->syncRoles($request->post('role'));
+
+               //通过用户找出所有角色
+              // $admin->roles();
+
+               //跳转并提示
+               return redirect()->route('admin.index')->with('success','创建'.$admin->name."成功");
+
+
+           }
+           //得到所有权限
+           $roles=Role::all();
+
+           return view('admin.admin.add',compact('roles'));
+       }
+
+
+   ```
+
+9. 判断权限 在E:\web\ele\app\Http\Controllers\Admin\BaseController.php 添加如下代码
+
+   ```php
+   <?php
+
+   namespace App\Http\Controllers\Admin;
+
+   use Illuminate\Http\Request;
+   use App\Http\Controllers\Controller;
+   use Illuminate\Support\Facades\Auth;
+   use Closure;
+   use Illuminate\Support\Facades\Route;
+
+   class BaseController extends Controller
+   {
+
+       public function __construct()
+       {
+           $this->middleware('auth:admin')->except("login");
+
+           //在这里判断用户有没有权限
+           //dump(Auth::guard('admin')->user());
+           $this->middleware(function ($request, Closure $next) {
+
+               $admin = Auth::guard('admin')->user();
+
+               //判断当前路由在不在这个数组里，不在的话才验证权限，在的话不验证，还可以根据排除用户ID为1
+               if (!in_array(Route::currentRouteName(), ['admin.login', 'admin.logout']) && $admin->id !== 1) {
+                   //判断当前用户有没有权限访问 路由名称就是权限名称
+                   if ($admin->can(Route::currentRouteName()) === false) {
+
+                       /* echo view('admin.fuck');
+                         exit;*/
+                       //显示视图 不能用return 只能exit
+                       exit(view('admin.fuck'));
+
+                   }
+
+               }
+
+
+               return $next($request);
+
+           });
+       }
+   }
+
+   ```
+
+10. 创建admin.fuck视图
+
+    ```php
+    @extends("layouts.admin.default")
+
+    @section("content")
+       没有权限
+    @endsection
+    ```
+
+    ​

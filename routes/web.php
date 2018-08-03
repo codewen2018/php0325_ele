@@ -24,6 +24,8 @@ Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
     Route::any('admin/changePassword', "AdminController@changePassword")->name('admin.changePassword');
     #后台用户列表
     Route::get('admin/index', "AdminController@index")->name('admin.index');
+    #后台用户添加
+    Route::any('admin/add', "AdminController@add")->name('admin.add');
     #后台用户删除
     Route::get('admin/del/{id}', "AdminController@del")->name('admin.del');
 
@@ -47,6 +49,15 @@ Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
     //活动管理
     Route::get('activity/index', "ActivityController@index")->name('admin.activity.index');
     Route::any('activity/add', "ActivityController@add")->name('admin.activity.add');
+
+
+    //权限管理
+    Route::get('per/index', "PerController@index")->name('admin.per.index');
+    Route::any('per/add', "PerController@add")->name('admin.per.add');
+
+    //角色管理
+    Route::get('role/index', "RoleController@index")->name('admin.role.index');
+    Route::any('role/add', "RoleController@add")->name('admin.role.add');
 });
 
 //商户

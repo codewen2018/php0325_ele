@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends BaseController
 {
@@ -47,31 +49,31 @@ class AdminController extends BaseController
     public function changePassword(Request $request)
     {
         //判断是否POST提交
-        if ($request->isMethod("post")){
+        if ($request->isMethod("post")) {
 
             //1.验证
-            $this->validate($request,[
-                'old_password'=>'required',
-                'password'=>'required|confirmed'
+            $this->validate($request, [
+                'old_password' => 'required',
+                'password' => 'required|confirmed'
             ]);
             //2.得到当前用户对象
-            $admin=Auth::guard('admin')->user();
+            $admin = Auth::guard('admin')->user();
 
-            $oldPassword=$request->post('old_password');
+            $oldPassword = $request->post('old_password');
             //3.判断老密码是否正确
-            if (Hash::check($oldPassword,$admin->password)){
+            if (Hash::check($oldPassword, $admin->password)) {
 
                 //3.1如果老密码正确 设置新密码
-                $admin->password=Hash::make($request->post('password'));
+                $admin->password = Hash::make($request->post('password'));
                 //3.2 保存修改
                 $admin->save();
 
                 //3.3 跳转
-                return redirect()->route('admin.index')->with("success","修改密码成功");
+                return redirect()->route('admin.index')->with("success", "修改密码成功");
             }
 
             //4.老密码不正确
-            return back()->with("danger","老密码不正确");
+            return back()->with("danger", "老密码不正确");
 
 
         }
@@ -85,9 +87,46 @@ class AdminController extends BaseController
      */
     public function index()
     {
-        $admins=Admin::all();
+        //在这里判断用户有没有权限
+        dump(Auth::guard('admin')->user());
+        $admins = Admin::all();
 
-        return view('admin.admin.index',compact('admins'));
+        return view('admin.admin.index', compact('admins'));
+    }
+
+    /**
+     * 添加用户
+     */
+    public function add(Request $request)
+    {
+        if ($request->isMethod('post')){
+
+
+            // dd($request->post('per'));
+            //接收参数
+            $data=$request->post();
+            $data['password']=bcrypt($data['password']);
+
+
+            //创建用户
+            $admin=Admin::create($data);
+
+
+            //给用户对象添加角色 同步角色
+            $admin->syncRoles($request->post('role'));
+
+            //通过用户找出所有角色
+           // $admin->roles();
+
+            //跳转并提示
+            return redirect()->route('admin.index')->with('success','创建'.$admin->name."成功");
+
+
+        }
+        //得到所有权限
+        $roles=Role::all();
+
+        return view('admin.admin.add',compact('roles'));
     }
 
     /**
@@ -99,15 +138,16 @@ class AdminController extends BaseController
 
 
         //1号管理员不能删除
-        if ($id==1){
-            return back()->with("danger","1不能删除");
+        if ($id == 1) {
+            return back()->with("danger", "1不能删除");
         }
-        $admin=Admin::findOrFail($id);
+        $admin = Admin::findOrFail($id);
 
         $admin->delete();
 
-        return redirect()->route('admin.index')->with("success","删除成功");
+        return redirect()->route('admin.index')->with("success", "删除成功");
     }
+
     /**
      * 平台admin注销
      */

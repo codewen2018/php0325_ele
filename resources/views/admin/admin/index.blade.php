@@ -1,7 +1,7 @@
 @extends("layouts.admin.default")
 
 @section("content")
-    <a href="" class="btn btn-primary">添加</a>
+    <a href="{{route('admin.add')}}" class="btn btn-primary">添加</a>
     <table class="table table-bordered">
         <tr>
             <th>Id</th>
