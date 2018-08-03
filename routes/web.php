@@ -16,6 +16,14 @@ Route::get('/', function () {
 });
 //平台
 Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
+
+    //测试
+    Route::get('/mail', function () {
+        $order = \App\Models\Order::findOrFail(26);
+
+        //return new \App\Mail\Order($order);
+        \Illuminate\Support\Facades\Mail::to(\App\Models\Admin::find(3))->send(new \App\Mail\Order($order));
+    });
     #后台用户登录
     Route::any('admin/login', "AdminController@login")->name('admin.login');
     #后台用户退出
@@ -58,6 +66,13 @@ Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
     //角色管理
     Route::get('role/index', "RoleController@index")->name('admin.role.index');
     Route::any('role/add', "RoleController@add")->name('admin.role.add');
+    Route::any('role/edit/{id}', "RoleController@edit")->name('admin.role.edit');
+    Route::get('role/del', "RoleController@del")->name('admin.role.del');
+
+
+    //菜单管理
+    Route::get('nav/index', "NavController@index")->name('admin.nav.index');
+    Route::any('nav/add', "NavController@add")->name('admin.nav.add');
 });
 
 //商户

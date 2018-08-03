@@ -639,34 +639,28 @@
 
    ```php
       public function add(Request $request){
-
-
            if ($request->isMethod('post')){
-
-
               // dd($request->post('per'));
                //接收参数
                $data['name']=$request->post('name');
                $data['guard_name']="admin";
 
-
                //创建角色
                $role=Role::create($data);
-
+    
                //还给给角色添加权限
                $role->syncPermissions($request->post('per'));
-
+    
                //跳转并提示
                return redirect()->route('admin.role.index')->with('success','创建'.$role->name."成功");
 
-
            }
-
+    
            //得到所有权限
            $pers=Permission::all();
-
+    
            return view('admin.role.add',compact('pers'));
-
+    
        }
    }
    ```
@@ -680,35 +674,29 @@
        public function add(Request $request)
        {
            if ($request->isMethod('post')){
-
-
-               // dd($request->post('per'));
+       // dd($request->post('per'));
                //接收参数
                $data=$request->post();
                $data['password']=bcrypt($data['password']);
 
-
                //创建用户
                $admin=Admin::create($data);
 
-
                //给用户对象添加角色 同步角色
                $admin->syncRoles($request->post('role'));
-
+    
                //通过用户找出所有角色
               // $admin->roles();
-
+    
                //跳转并提示
                return redirect()->route('admin.index')->with('success','创建'.$admin->name."成功");
-
 
            }
            //得到所有权限
            $roles=Role::all();
-
+    
            return view('admin.admin.add',compact('roles'));
        }
-
 
    ```
 
@@ -751,10 +739,8 @@
                    }
 
                }
-
-
-               return $next($request);
-
+         return $next($request);
+    
            });
        }
    }
@@ -763,12 +749,21 @@
 
 10. 创建admin.fuck视图
 
-    ```php
-    @extends("layouts.admin.default")
+  ```php
+  @extends("layouts.admin.default")
 
-    @section("content")
-       没有权限
-    @endsection
-    ```
+  @section("content")
+     没有权限
+  @endsection
+  ```
 
-    ​
+11. 其它方法
+
+   ```php
+   //判断当前角色有没有当前权限
+   $role->hasPermissionTo('edit articles');
+   //取出当前角色所拥有的所有权限
+   $role->permissions();
+   ```
+
+   ​
