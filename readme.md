@@ -771,3 +771,119 @@
    ```
 
    ​
+
+## Day11
+
+### 开发任务
+
+​       平台 
+
+- 导航菜单管理 
+
+- 根据权限显示菜单 
+
+- 配置RBAC权限管理 
+
+  ​
+
+  商家 
+
+- 发送邮件(商家审核通过,以及有订单产生时,给商家发送邮件提醒) 
+  用户 
+
+- 下单成功时,给用户发送手机短信提醒
+
+### 实现步骤
+
+#### 邮件发送
+
+1. 配置.env
+
+   ```php
+   MAIL_DRIVER=smtp
+   MAIL_HOST=smtp.163.com
+   MAIL_PORT=25
+   MAIL_USERNAME=kang6728@163.com
+   MAIL_PASSWORD=php0325
+   MAIL_ENCRYPTION=null
+   ```
+
+2. php artisan make:mail OrderShipped 
+
+3. 打开E:\web\ele\app\Mail\OrderShipped.php 
+
+   ```php
+   <?php
+
+   namespace App\Mail;
+
+   use App\Models\Order;
+   use Illuminate\Bus\Queueable;
+   use Illuminate\Mail\Mailable;
+   use Illuminate\Queue\SerializesModels;
+   use Illuminate\Contracts\Queue\ShouldQueue;
+
+   class OrderShipped extends Mailable
+   {
+       use Queueable, SerializesModels;
+
+       //声明一个仅供的属性用来存订单模型对象
+       public $order;
+       /**
+        * Create a new message instance.
+        *
+        * @return void
+        */
+       public function __construct(Order $order)
+       {
+           //从外部传入订单实例
+           $this->order=$order;
+       }
+
+       /**
+        * Build the message.
+        *
+        * @return $this
+        */
+       public function build()
+       {
+           return $this
+               ->from("kang6728@163.com")
+               ->view('mail.order',['order'=>$this->order]);
+       }
+   }
+
+   ```
+
+4. 邮件预览 在路由中
+
+   ```php
+     //测试
+       Route::get('/mail', function () {
+           $order =\App\Models\Order::find(26);
+
+           return new \App\Mail\OrderShipped($order);
+       });
+   ```
+
+5. 发送邮件
+
+   ```php
+           $order =\App\Models\Order::find(26);
+
+           $user=User::where('shop_id',$id)->first();
+           //通过审核发送邮件
+           Mail::to($user)->send(new OrderShipped($order));
+   ```
+
+   ### 数据表设计
+
+   #### 导航菜单表 navs
+
+   | 字段名称 | 类型    | 备注       |
+   | -------- | ------- | ---------- |
+   | id       | primary | 主键       |
+   | name     | string  | 名称       |
+   | url      | string  | 地址       |
+   | sort     | int     | 排序       |
+   | pid      | int     | 上级菜单id |
