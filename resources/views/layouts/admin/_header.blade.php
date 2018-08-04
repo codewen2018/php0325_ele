@@ -16,37 +16,19 @@
             <ul class="nav navbar-nav">
                 <li ><a href="/">首页 <span class="sr-only">(current)</span></a></li>
 
+                @foreach(\App\Models\Nav::where('parent_id',0)->get() as $k1=>$v1)
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">店铺分类 <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$v1->name}} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{route('shop_cate.index')}}">店铺分类列表</a></li>
-                        <li><a href="#">添加店铺分类</a></li>
+                        @foreach(\App\Models\Nav::where("parent_id",$v1->id)->get() as $k2=>$v2)
+                            @if(\Illuminate\Support\Facades\Auth::guard('admin')->user()->can($v2->url))
+                        <li><a href="{{route($v2->url)}}">{{$v2->name}}</a></li>
+                            @endif
+                       @endforeach
                     </ul>
                 </li>
+               @endforeach
 
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">店铺管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{route('admin.shop.index')}}">店铺列表</a></li>
-                        <li><a href="#">添加店铺</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{route('admin.user.index')}}">用户列表</a></li>
-                        <li><a href="#">添加用户</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{route('admin.index')}}">管理员列表</a></li>
-                        <li><a href="#">添加管理员</a></li>
-                    </ul>
-                </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

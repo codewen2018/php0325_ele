@@ -44,7 +44,11 @@ class NavController extends Controller
 
             //dd($value->action);
             if ($value->action['namespace']==="App\Http\Controllers\Admin"){
-                $urls[]=$value->action['as'];
+
+                if (isset($value->action['as'])){
+                     $urls[]=$value->action['as'];
+                }
+
             }
         }
 

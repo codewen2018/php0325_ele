@@ -19,10 +19,9 @@ Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
 
     //测试
     Route::get('/mail', function () {
-        $order = \App\Models\Order::findOrFail(26);
+        $order =\App\Models\Order::find(26);
 
-        //return new \App\Mail\Order($order);
-        \Illuminate\Support\Facades\Mail::to(\App\Models\Admin::find(3))->send(new \App\Mail\Order($order));
+        return new \App\Mail\OrderShipped($order);
     });
     #后台用户登录
     Route::any('admin/login', "AdminController@login")->name('admin.login');

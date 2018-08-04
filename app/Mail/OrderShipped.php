@@ -2,22 +2,24 @@
 
 namespace App\Mail;
 
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Order extends Mailable
+class OrderShipped extends Mailable
 {
     use Queueable, SerializesModels;
 
+    //声明一个仅供的属性用来存订单模型对象
     public $order;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(\App\Models\Order $order)
+    public function __construct(Order $order)
     {
         //
         $this->order=$order;
@@ -30,6 +32,8 @@ class Order extends Mailable
      */
     public function build()
     {
-        return $this->from("563445706@qq.com")->view('mail.order',['order'=>$this->order]);
+        return $this
+            ->from("kang6728@163.com")
+            ->view('mail.order',['order'=>$this->order]);
     }
 }

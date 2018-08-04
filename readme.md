@@ -762,8 +762,12 @@
    ```php
    //判断当前角色有没有当前权限
    $role->hasPermissionTo('edit articles');
+   //判断当前用户有没有权限
+   $admin->hasRole('角色名')
    //取出当前角色所拥有的所有权限
    $role->permissions();
+   //取出当前用户所拥有的角色
+   $roles = $admin->getRoleNames(); // 返回一个集合
    ```
 
    ​
