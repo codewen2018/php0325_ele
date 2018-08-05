@@ -943,3 +943,71 @@
 
 1. 通过活动ID找出对应的商户和奖品
 2. 把商户打乱，循环奖品给奖品的user_id绑定上商户的ID
+
+#### 上线
+
+#### 安装宝塔
+
+1. 重置服务器，安装最新的centos操作系统
+
+2. 找到外网IP，用Xshell连接上服务器
+
+3. 在XShell执行命令  
+
+   yum install -y wget && wget -O install.sh http://download.bt.cn/install/install.sh && sh install.sh
+
+4. 开端口，以下主机商必看（开端口教程，不开不能用）：
+
+   腾讯云：<https://www.bt.cn/bbs/thread-1229-1-1.html>
+
+   阿里云：<https://www.bt.cn/bbs/thread-2897-1-1.html>
+
+   华为云：
+
+   https://www.bt.cn/bbs/thread-3923-1-1.html
+
+5. 登录宝塔，安装LAMP   PHP版本>7.0
+
+   ```php
+   Bt-Panel: http://118.24.189.88:8888
+   username: qcxe4dy0
+   password: cd52557d
+   ```
+
+6. 添加一个网站，设置域名 三个域名
+
+7. 把代码更新到github
+
+8. 在XShell中www/wwwroot的目录中执行命令 
+
+   git clone https://github.com/codewen2018/php0325_ele.git
+
+   或 直接下载 https://github.com/codewen2018/php0325_ele/archive/master.zip 到本地其后再上传到网站根目录
+
+9. 进入php0325_ele目录
+
+10. 更新composer版本 `composer self-update`
+
+11. 配置国内镜像站点 `composer config -g repo.packagist composer https://packagist.laravel-china.org`   删除根目录下composer.lock
+
+12. 进入项目根目录,执行`composer install`安装框架和插件
+
+13. 发现错误如下
+
+    ```php
+     [Symfony\Component\Process\Exception\RuntimeException]                                   
+      The Process class relies on proc_open, which is not available on your PHP installation. 
+    ```
+
+    打开PHP配置文件，删除相关禁用函数
+
+14. 执行命令 cp .env.example .env 生成新配置文件
+
+15. 执行命令 php artisan key:generate 生成key
+
+16. 执行这条命令 chown -R www.www php0325_ele 把这个项目目录的所 有者更改www 
+
+17. 执行数据迁移
+
+18. 以后每次更新直接用git pull
+
