@@ -38,6 +38,7 @@ class ShopController extends BaseController
         $user=User::where('shop_id',$id)->first();
         //通过审核发送邮件
         Mail::to($user)->send(new OrderShipped($order));
+
         //session()->flash("success","通过审核");
         return back()->with("success", "通过审核");
 

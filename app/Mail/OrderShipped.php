@@ -34,6 +34,7 @@ class OrderShipped extends Mailable
     {
         return $this
             ->from("kang6728@163.com")
+            ->subject("订单确认")
             ->view('mail.order',['order'=>$this->order]);
     }
 }
