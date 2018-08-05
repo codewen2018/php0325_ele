@@ -31,11 +31,11 @@ class Nav extends Model
             foreach ($childs as $v){
                 //2.3判断儿子有没有权限
                 if (\Illuminate\Support\Facades\Auth::guard('admin')->user()->can($v->url)){
-                    //如果有权限
+                    //                    //如果有权限
                     $ok=1;
                 }
                 //2.4 如果$ok===0 就说明没有儿子有权限 就把当前分类的删除
-                if ($ok===0){
+                if ($ok===0 && \Illuminate\Support\Facades\Auth::guard('admin')->user()->id!=1){
                     unset($navs[$k]);
                 }
             }
