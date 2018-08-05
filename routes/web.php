@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return "home";
 });
 //平台
 Route::domain('admin.zhilipeng.com')->namespace('Admin')->group(function () {
