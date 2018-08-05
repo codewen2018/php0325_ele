@@ -970,8 +970,8 @@
 
    ```php
    Bt-Panel: http://118.24.189.88:8888
-   username: qcxe4dy0
-   password: cd52557d
+   username: xxxx
+   password: xxx
    ```
 
 6. 添加一个网站，设置域名 三个域名

@@ -12,10 +12,12 @@
 */
 
 Route::get('/', function () {
-    return "home";
+
+    $admin=\App\Models\Admin::find(3);
+   return json_encode($admin->getRoleNames(),JSON_UNESCAPED_UNICODE);
 });
 //平台
-Route::domain('admin.zhilipeng.com')->namespace('Admin')->group(function () {
+Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
 
     //测试
     Route::get('/mail', function () {
@@ -75,7 +77,7 @@ Route::domain('admin.zhilipeng.com')->namespace('Admin')->group(function () {
 });
 
 //商户
-Route::domain('shop.zhilipeng.com')->namespace('Shop')->group(function () {
+Route::domain('shop.ele.com')->namespace('Shop')->group(function () {
 
     //测试
     Route::any("test/add","TestController@add")->name('test.add');
