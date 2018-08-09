@@ -929,7 +929,7 @@
 | description | text    | 奖品详情       |
 | user_id     | int     | 中奖商家账号id |
 
-#### 活动报名表 event_members
+#### 活动报名表 event_users
 
 | 字段名称 | 类型    | 备注       |
 | -------- | ------- | ---------- |
@@ -1009,5 +1009,174 @@
 
 17. 执行数据迁移
 
-18. 以后每次更新直接用git pull
+18. 以后每次更新直接用 git pull
+
+
+## Day13
+
+### 开发任务
+
+项目上线 
+
+### 实现步骤
+
+## Day14
+
+### 开发任务
+
+#### 网站优化 
+
+\- 高并发下,使用redis解决活动报名问题 
+\- 店铺列表和详情接口使用redis做缓存,减少数据库压力 
+\- 自动清理超时未支付订单 
+\- 活动列表页和活动详情页,页面静态化
+
+#### 接口安全
+
+HTTPS+TOKEN+数字签名
+
+### 实现步骤
+
+#### 报名
+
+1. 在添加抽奖活动的时候把报名人数存到redis中 event_num:id      10
+
+2. 报名
+
+   ```php
+    public function sign(Request $request)
+       {
+           $eventId = $request->input('event_id');
+           $userId = $request->input('user_id');
+
+           //判断当前报名人数 和限制报名人数
+
+           //1.取出限制报名人数
+           $num=Redis::get("event_num:".$eventId);
+
+           //2.取出已报名人数
+           $users=Redis::scard("event:".$eventId);
+
+           //3.判断
+           if ($users<$num){
+
+               //存reids 集合
+               Redis::sadd("event:".$eventId,$userId);
+               return "报名成功";
+           }
+
+           return "已报满";
+
+       }
+   ```
+
+3. redis 持久化
+
+4. 开奖也用redis,在开奖的同时把数据同步到数据库中
+
+
+
+#### 缓存
+
+1. 判断redis中有没有缓存，如果有，直接返回
+
+2. 如果没有，在数据库中取出，并把把结果存到redis中
+
+3. 存的的时候要加过期时间，在做写操作的时候要删除对应的缓存
+
+   > 访问量大，不经常改动的东西可以使用缓存 eg:分类列表
+
+
+
+#### 超时未支付的订单
+
+##### 定时任务版
+
+1. 找出所有超时未支付的订单，然后更改状态为-1
+2. 在宝塔上设置定时任务，每分钟访问一次URL地址
+
+> 缺点：只能精确到分钟
+
+##### 命令行版本
+
+1. php artisan make:command OrderClear
+
+2. 打开 E:\web\ele\app\Console\Commands\OrderClear.php 文件
+
+   ```php
+   <?php
+
+   namespace App\Console\Commands;
+
+   use Illuminate\Console\Command;
+
+   class OrderClear extends Command
+   {
+       /**
+        * The name and signature of the console command.
+        *
+        * @var string
+        */
+       //命令的名称
+       protected $signature = 'order:clear';
+
+       /**
+        * The console command description.
+        *
+        * @var string
+        */
+       protected $description = 'order clear 11111';
+
+       /**
+        * Create a new command instance.
+        *
+        * @return void
+        */
+       public function __construct()
+       {
+           parent::__construct();
+       }
+
+       /**
+        * Execute the console command.
+        *
+        * @return mixed
+        */
+       //所有逻辑处理放在这里
+       public function handle()
+       {
+           /**
+            * 1.找出 超时   未支付   订单
+            * 当前时间-创建时间>15*60
+            * 当前时间-15*60>创建时间
+            * 创建时间<当前时间-15*60
+            * */
+           while (true){
+               $orders=\App\Models\Order::where("status",0)->where('created_at','<',date("Y-m-d H:i:s",(time()-15*60)))->update(['status'=>-1]);
+               if ($orders){
+                   echo date("Y-m-d H:i:s")." clear ok".PHP_EOL;
+               }else{
+                   echo date("Y-m-d H:i:s")."no orders";
+               }
+               sleep(5);
+           }
+       }
+   }
+
+   ```
+
+3. 执行命令 php artisan order:clear
+
+##### 页面静态化
+
+```php
+Route::get('/test', function () {
+
+    //页面静态化
+    $html=(string)view('welcome');
+
+    file_put_contents(public_path('test.html'),$html);
+
+});
+```
 

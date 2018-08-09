@@ -3,9 +3,30 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Shop extends Model
 {
+    use Searchable;
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+
+        $array = $this->only('id','shop_name');
+
+        // Customize array...
+
+        return $array;
+    }
+
+
+
+
     public static $statusArray=['1'=>'正常','0'=>'待审核',"-1"=>'已禁用'];
 
 

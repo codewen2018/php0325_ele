@@ -29,6 +29,7 @@ Route::namespace('Api')->group(function () {
     Route::any("member/login","MemberController@login");
     Route::post("member/reg","MemberController@reg");
     Route::get("member/detail","MemberController@detail");
+    Route::get("member/money","MemberController@money");
 
 
 
@@ -45,4 +46,6 @@ Route::namespace('Api')->group(function () {
     Route::get("order/detail","OrderController@detail");
     Route::post("order/pay","OrderController@pay");
     Route::get("order/index","OrderController@index");
+    Route::get("order/wxPay","OrderController@wxPay");
+    Route::get("order/status","OrderController@status");
 });

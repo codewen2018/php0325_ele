@@ -146,11 +146,17 @@ class MemberController extends BaseController
         //2.如果用户密码存在 再来验证密码  Hash:check
         //3.如果密码也成功 登录成功
         if ($member && Hash::check($request->post('password'), $member->password)) {
+
+            //生成令牌
+            $token=md5($member->id.time());
+            //并把令牌存到redis
+            Redis::SETEX("member:".$member->id,60*60*24*7,$token);
             return [
                 'status' => 'true',
                 'message' => '登录成功',
                 'user_id'=>$member->id,
-                'username'=>$member->username
+                'username'=>$member->username,
+                'token'=>$token
             ];
 
         }
@@ -169,5 +175,56 @@ class MemberController extends BaseController
     public function detail(Request $request)
     {
         return Memeber::find($request->input('user_id'));
+    }
+
+    public function money(Request $request){
+
+        //声明密码
+        $password="itsource.cn123412532q1352zdxvafdsa";
+        $data=$request->input();
+         unset($data['sign']);
+        //排序
+        ksort($data);
+
+        //声明一个空字符串
+        $str="";
+        //循环数组
+        foreach ($data as $k=>$v){
+            $str.=$k.$v;
+
+        }
+
+       //签名：
+        $sign=md5($password.$str.$password);
+
+        dump($sign);
+        if ($sign!==$request->input('sign')){
+
+            return "签名失败";
+        }
+
+
+
+       //dump($sign);exit;
+
+        $id=$request->input('id');
+        $token=$request->input('token');
+
+        //通过用户Id把redis中的token取出来
+        $oldToken=Redis::get("member:".$id);
+
+        if ($token!==null && $token===$oldToken){
+
+            //续个命
+
+
+            Redis::SETEX("member:".$id,60*60*24*7,$token);
+
+            return Memeber::where('id',$request->input('id'))->increment('money',$request->input('money'));
+        }
+
+
+        return "fuck you";
+
     }
 }

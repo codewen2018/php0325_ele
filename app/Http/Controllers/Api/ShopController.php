@@ -7,6 +7,8 @@ use App\Models\MenuCategory;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class ShopController extends BaseController
 {
@@ -23,7 +25,18 @@ class ShopController extends BaseController
         $keyword = $request->input('keyword');
 
 
-        $shops = Shop::where("status", 1)->where('shop_name', 'like', "%$keyword%")->get();
+
+
+        if ($keyword===null){
+            $shops = Shop::where('status',1)->get();
+
+        }else{
+            $shops = Shop::search($keyword)->where('status',1)->get();
+        }
+
+
+
+
 
 
         foreach ($shops as $shop) {
@@ -38,6 +51,15 @@ class ShopController extends BaseController
     {
         //店铺的ID
         $id = $request->input('id');
+
+
+        //判断redis中有没有缓存
+        $data=Redis::get("shop:".$id);
+
+        if ($data){
+
+            return $data;
+        }
 
         //取出当前店铺信息
         $shop = Shop::findOrFail($id);
@@ -93,6 +115,9 @@ class ShopController extends BaseController
         //再把分类数据追加到$shop
         $shop->commodity = $cates;
         // dump($cates->toArray());
+
+        //存到redis中 必需要设置过期时间
+        Redis::setex("shop:".$id,60*60*24*7,$shop);
         return $shop;
     }
 }

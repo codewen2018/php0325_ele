@@ -1,4 +1,4 @@
-<footer class="footer navbar-fixed-bottom ">
+<footer class="footer ">
     <div class="container">
         <hr>
         <p class="text-center"> Good Good Study,Day Day Up! </p>

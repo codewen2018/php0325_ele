@@ -193,6 +193,25 @@ class OrderController extends BaseController
         ];
     }
 
+
+    //微信支持
+    public function wxPay(Request $request){
+
+        return [
+            'url'=>'https://www.itsource.cn/img/footer_weixin.png'
+        ];
+    }
+
+    //订单状态
+    public function status(Request $request)
+    {
+
+        return [
+            'status'=>Order::find($request->input('id'))->status
+        ];
+
+    }
+
     /**
      * 订单列表
      */
