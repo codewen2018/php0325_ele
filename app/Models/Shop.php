@@ -8,7 +8,7 @@ use Laravel\Scout\Searchable;
 class Shop extends Model
 {
     use Searchable;
-
+    //public $asYouType = true;
     /**
      * Get the indexable data array for the model.
      *

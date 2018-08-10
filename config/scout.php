@@ -106,7 +106,7 @@ return [
 
             'jieba' => [
                 'dict' => 'small',
-                //'user_dict' => resource_path('dicts/mydict.txt'), //自定义词典路径
+                'user_dict' => resource_path('dicts/mydict.txt'), //自定义词典路径
             ],
 
             'analysis' => [

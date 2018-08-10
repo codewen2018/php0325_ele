@@ -6,7 +6,7 @@
     <meta name=viewport
           content="width=device-width,initial-scale=0.3333333333333333,maximum-scale=0.3333333333333333,minimum-scale=0.3333333333333333,user-scalable=no">
     <title>vue</title>
-    <link href=./static/css/app.d3e5803542deea468fc8422bb1cbff19.css rel=stylesheet>
+    <link href=./static/css/app.d40081f78a711e3486e27f787eed3c1f.css rel=stylesheet>
 </head>
 <body>
 <svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink
@@ -278,8 +278,8 @@
 </svg>
 <div id=app></div>
 <script type=text/javascript src=./api.js></script>
-<script type=text/javascript src=./static/js/manifest.bf47bd5bb8a75c90ebf3.js></script>
-<script type=text/javascript src=./static/js/vendor.e5643881de5ee90ca423.js></script>
-<script type=text/javascript src=./static/js/app.8043fce69b3d63c6da22.js></script>
+<script type=text/javascript src=./static/js/manifest.59bf1f05749e37c381b0.js></script>
+<script type=text/javascript src=./static/js/vendor.5ae9090e4744f6e68d24.js></script>
+<script type=text/javascript src=./static/js/app.4bc07750056465c05616.js></script>
 </body>
 </html>

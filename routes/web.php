@@ -11,12 +11,9 @@
 |
 */
 
-Route::get('/test', function () {
+Route::get('/', function () {
 
-    //页面静态化
-    $html=(string)view('welcome');
-
-    file_put_contents(public_path('test.html'),$html);
+return view('index');
 
 });
 Route::get('/order/clear', function () {
@@ -37,7 +34,7 @@ Route::get('/order/clear', function () {
 });
 
 //平台
-Route::domain('admin.ele.com')->namespace('Admin')->group(function () {
+Route::domain(env('ADMIN_DOMAIN'))->namespace('Admin')->group(function () {
 
     //测试
     Route::get('/mail', function () {

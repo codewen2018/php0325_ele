@@ -48,4 +48,7 @@ Route::namespace('Api')->group(function () {
     Route::get("order/index","OrderController@index");
     Route::get("order/wxPay","OrderController@wxPay");
     Route::get("order/status","OrderController@status");
+    Route::any("order/ok","OrderController@ok");
+
+
 });

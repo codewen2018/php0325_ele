@@ -1167,7 +1167,7 @@ HTTPS+TOKEN+数字签名
 
 3. 执行命令 php artisan order:clear
 
-##### 页面静态化
+#### 页面静态化
 
 ```php
 Route::get('/test', function () {
@@ -1180,3 +1180,196 @@ Route::get('/test', function () {
 });
 ```
 
+#### 接口安全
+
+##### https
+
+##### token
+
+1.用户提交“用户名”和“密码”，实现登录
+
+2.登录成功后，服务端返回一个 token，生成规则参考如下：token = md5('用户的id' + 'Unix时间戳')
+
+3.服务端将生成 token和用户id的对应关系保存到redis，并设置有效期（例如7天）
+
+4.客户端每次接口请求时，如果接口需要用户登录才能访问，则需要把 user_id 与 token 传回给服务端
+
+5.服务端验证token 和用户id的关系，更新token 的过期时间（延期，保证其有效期内连续操作不掉线）
+
+##### 数字签名
+
+1.对除签名外的所有请求参数按key做升序排列 （假设当前时间的时间戳是12345678）
+
+例如：有c=3,b=2,a=1 三个参，另加上时间戳后， 按key排序后为：a=1，b=2，c=3，timestamp=12345678。
+
+2.把参数名和参数值连接成字符串，得到拼装字符：a1b2c3timestamp12345678
+
+3.用密钥连接到接拼装字符串头部和尾部，然后进行32位MD5加密，最后将到得MD5加密摘要转化成大写。
+
+## DAY15 
+
+### 开发任务
+
+微信支付
+
+### 实现步骤
+
+1. 安装  composer require "overtrue/laravel-wechat:~3.0" -vvv
+
+2. 发布配置  php artisan vendor:publish --provider="Overtrue\LaravelWechat\ServiceProvider"
+
+3. 修改配置  E:\web\ele\config\wechat.php
+
+   ```php
+   <?php
+
+   return [
+       /*
+        * Debug 模式，bool 值：true/false
+        *
+        * 当值为 false 时，所有的日志都不会记录
+        */
+       'debug'  => true,
+
+       /*
+        * 使用 Laravel 的缓存系统
+        */
+       'use_laravel_cache' => true,
+
+       /*
+        * 账号基本信息，请从微信公众平台/开放平台获取
+        */
+       'app_id'  => env('WECHAT_APPID', 'wx85adc8c943b8a477'),         // AppID
+       'secret'  => env('WECHAT_SECRET', 'your-app-secret'),     // AppSecret
+       'token'   => env('WECHAT_TOKEN', 'your-token'),          // Token
+       'aes_key' => env('WECHAT_AES_KEY', ''),                    // EncodingAESKey
+
+       /*
+        * 微信支付
+        */
+        'payment' => [
+           'merchant_id'        => env('WECHAT_PAYMENT_MERCHANT_ID', '1228531002'),
+           'key'                => env('WECHAT_PAYMENT_KEY', 'yuanmashidai2010itsource20180510'),
+           //'cert_path'          => env('WECHAT_PAYMENT_CERT_PATH', 'path/to/your/cert.pem'), // XXX: 绝对路径！！！！
+           //'key_path'           => env('WECHAT_PAYMENT_KEY_PATH', 'path/to/your/key'),      // XXX: 绝对路径！！！！
+           // 'device_info'     => env('WECHAT_PAYMENT_DEVICE_INFO', ''),
+           // 'sub_app_id'      => env('WECHAT_PAYMENT_SUB_APP_ID', ''),
+           // 'sub_merchant_id' => env('WECHAT_PAYMENT_SUB_MERCHANT_ID', ''),
+           // ...
+       ],
+       'guzzle' => [
+           'timeout' => 3.0, // 超时时间（秒）
+           'verify' => false, // 关掉 SSL 认证（强烈不建议！！！）
+       ],
+   ];
+
+   ```
+
+4. 安装二维码生成包   composer require "endroid/qr-code:~2.5" -vvv
+
+5. 统一下单拿到code_url并生成二维码
+
+   ```php
+   //微信支持
+       public function wxPay(Request $request){
+
+           //得到订单
+           $order=Order::find($request->input('id'));
+
+           //dd(config('wechat'));
+
+           //1.创建操作微信的对象
+           $app = new Application(config('wechat'));
+           //2.得到支付对象
+           $payment = $app->payment;
+           //3.生成订单
+           //3.1 订单配置
+           $attributes = [
+               'trade_type'       => 'NATIVE', // JSAPI，NATIVE，APP...
+               'body'             => '源码点餐',
+               'detail'           => '源码点餐详情',
+               'out_trade_no'     => $order->sn,
+               'total_fee'        => $order->total*100, // 单位：分
+               'notify_url'       => 'http://wenwww.zhilipeng.com/api/order/ok', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+              // 'openid'           => '当前用户的 openid', // trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识，
+               // ...
+           ];
+           //3.2 订单生成
+           $order = new \EasyWeChat\Payment\Order($attributes);
+           //4.统一下单
+           $result = $payment->prepare($order);
+          // dd($result);
+           if ($result->return_code == 'SUCCESS' && $result->result_code == 'SUCCESS'){
+               //5.取出预支付链接
+              $payUrl=  $result->code_url;
+              //6.把支付链接生成二维码
+               /*$qrCode = new QrCode($payUrl);
+               header('Content-Type: '.$qrCode->getContentType());
+               echo $qrCode->writeString();*/
+
+               // Create a basic QR code
+               $qrCode = new QrCode($payUrl);//地址
+               $qrCode->setSize(200);//二维码大小
+
+   // Set advanced options
+               $qrCode->setWriterByName('png');
+               $qrCode->setMargin(10);
+               $qrCode->setEncoding('UTF-8');
+               $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH);//容错级别
+               $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
+               $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+               $qrCode->setLabel('微信扫码支付', 16, public_path().'/assets/noto_sans.otf', LabelAlignment::CENTER);
+               $qrCode->setLogoPath(public_path().'/assets/ll.png');
+               $qrCode->setLogoWidth(80);//logo大小
+
+
+   // Directly output the QR code
+               header('Content-Type: '.$qrCode->getContentType());
+               echo $qrCode->writeString();
+               exit;
+           }
+
+
+       }
+   ```
+
+6. 微信异步通知3-5次
+
+   ```php
+     //微信异步通知方法
+       public function ok(){
+
+           //1.创建操作微信的对象
+           $app = new Application(config('wechat'));
+           //2.处理微信通知信息
+           $response = $app->payment->handleNotify(function($notify, $successful){
+               // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
+             //  $order = 查询订单($notify->out_trade_no);
+               $order=Order::where("sn",$notify->out_trade_no)->first();
+
+               if (!$order) { // 如果订单不存在
+                   return 'Order not exist.'; // 告诉微信，我已经处理完了，订单没找到，别再通知我了
+               }
+               // 如果订单存在
+               // 检查订单是否已经更新过支付状态
+               if ($order->status!==0) { // 假设订单字段“支付时间”不为空代表已经支付
+                   return true; // 已经支付成功了就不再更新了
+               }
+               // 用户是否支付成功
+               if ($successful) {
+                   // 不是已经支付状态则修改为已经支付状态
+                  // $order->paid_at = time(); // 更新支付时间为当前时间
+                   $order->status = 1;//更新订单状态
+               }
+
+               $order->save(); // 保存订单
+
+               return true; // 返回处理完成
+           });
+
+           return $response;
+
+       }
+   ```
+
+   > 微信异步通知是ＰＯＳＴ请求，会有ＣＳＲＦ问题，把路由放在ＡＰＩ．ｐｈｐ中或在CSRF中间件中排除对应URL地址
